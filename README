@@ -6,3 +6,33 @@ Feel free to use any of this material!
 
 -AlaskaLinuxUser
 https://thealaskalinuxuser.wordpress.com/
+
+AKLU-jf kernel
+
+Features:
+-Lionheart and Smartmax governors
+-GPU overclocked to 487Mhz
+-Fast charge
+-Psudo file system encryption support
+
+
+Change log:
+
+20160722
+-Turned Lionheart and Smartmax back on.
+
+20160720
+-Added GPU overclock from 450MHz to 487MHz with some numbers pulled from work done by @faux123!
+
+20160706
+-Added Fast Charge commits! Enable with Kernel Adiutor App!
+
+20160705
+-Changed source to ArcTeam kernel 3.4.112
+-Enabled Lionheart and Smartmax Governors!
+-Enabled psudo file system encryption
+
+Pre 20160705
+-Using source 3.4.110
+-Added Lionheart Governor!
+
