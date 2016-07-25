@@ -11,12 +11,16 @@ AKLU-jf kernel
 
 Features:
 -Lionheart and Smartmax governors
+-CPU overclocked to 1998MHz
 -GPU overclocked to 487Mhz
 -Fast charge
 -Psudo file system encryption support
 
 
 Change log:
+
+20160725
+-Added CPU overclock from 1890MHz to 1998MHz with some modified numbers pulled from work done by @faux123!
 
 20160722
 -Turned Lionheart and Smartmax back on.
