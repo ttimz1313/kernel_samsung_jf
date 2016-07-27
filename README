@@ -10,7 +10,7 @@ https://thealaskalinuxuser.wordpress.com/
 AKLU-jf kernel
 
 Features:
--Lionheart and Smartmax governors
+-Lionheart and many other governors
 -CPU overclocked to 1998MHz
 -GPU overclocked to 487Mhz
 -Fast charge
@@ -18,6 +18,16 @@ Features:
 
 
 Change log:
+
+20160727
+-Added VR I/O scheduler
+-Enabled more Governors, in addition to the others:
+	Lagfree
+	Intelliactive
+	Intellidemand
+	SmartassV2
+	Badass
+-Edited SmartMax governor minimum frequency to 384000, it was 368000, which had potential to cause the sleep of death.
 
 20160725
 -Added CPU overclock from 1890MHz to 1998MHz with some modified numbers pulled from work done by @faux123!

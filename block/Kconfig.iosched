@@ -43,6 +43,13 @@ config IOSCHED_ROW
 	  according to queue priority.
 	  Most suitable for mobile devices.
 
+config IOSCHED_VR
+	tristate "VR I/O scheduler"
+	default y
+	---help---
+	  The VR I/O scheduler gives the best benchmark readings, but is 
+	  somewhat unstable/unreliable for daily use.
+
 config IOSCHED_CFQ
 	tristate "CFQ I/O scheduler"
 	# If BLK_CGROUP is a module, CFQ has to be built as module.
