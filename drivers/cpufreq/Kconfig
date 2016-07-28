@@ -127,6 +127,12 @@ config CPU_FREQ_DEFAULT_GOV_SMARTMAX
 	help
 	  Use the CPUFreq governor 'smartmax' as default
 
+config CPU_FREQ_DEFAULT_GOV_WHEATLEY
+ 	bool "wheatley"
+ 	select CPU_FREQ_GOV_WHEATLEY
+ 	help
+ 	  Use the CPUFreq governor 'wheatley' as default.
+
 config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
 	bool "smartass2"
 	select CPU_FREQ_GOV_SMARTASSV2
@@ -238,6 +244,10 @@ config CPU_FREQ_GOV_INTERACTIVE
 	  For details, take a look at linux/Documentation/cpu-freq.
 
 	  If in doubt, say N.
+
+config CPU_FREQ_GOV_WHEATLEY
+ 	tristate "'wheatley' cpufreq governor"
+ 	depends on CPU_FREQ
 
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
