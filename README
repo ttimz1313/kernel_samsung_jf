@@ -18,6 +18,10 @@ Features:
 
 
 Change log:
+20160729
+-Edited overclocking to add 25mv to overclock 1998MHz.
+-Added 1890MHz back in.
+
 20160728
 -Added wheatley governor
 
