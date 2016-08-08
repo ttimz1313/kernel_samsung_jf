@@ -11,16 +11,19 @@ AKLU-jf kernel
 
 Features:
 -Lionheart and many other governors
--CPU overclocked to 1998MHz
--GPU overclocked to 487Mhz
+-CPU overclocked to 1998 MHz
+-GPU overclocked to 487 Mhz
 -Fast charge
 -Psudo file system encryption support
 
 
 Change log:
+20160808
+-Added 450 MHz GPU frequency back in. Still overclocked to 487 MHz.
+
 20160729
--Edited overclocking to add 25mv to overclock 1998MHz.
--Added 1890MHz back in.
+-Edited overclocking to add 25mv to overclock 1998 MHz.
+-Added 1890MHz CPU frequency back in. Still overclocked to 1998 MHz.
 
 20160728
 -Added wheatley governor
@@ -36,13 +39,13 @@ Change log:
 -Edited SmartMax governor minimum frequency to 384000, it was 368000, which had potential to cause the sleep of death.
 
 20160725
--Added CPU overclock from 1890MHz to 1998MHz with some modified numbers pulled from work done by @faux123!
+-Added CPU overclock from 1890MHz to 1998 MHz with some modified numbers pulled from work done by @faux123!
 
 20160722
 -Turned Lionheart and Smartmax back on.
 
 20160720
--Added GPU overclock from 450MHz to 487MHz with some numbers pulled from work done by @faux123!
+-Added GPU overclock from 450 MHz to 487 MHz with some numbers pulled from work done by @faux123!
 
 20160706
 -Added Fast Charge commits! Enable with Kernel Adiutor App!
