@@ -175,6 +175,7 @@ static int simple_governor(struct kgsl_device *device, int idle_stat)
 	}
 	return val;
 }
+
 {
 	struct kgsl_pwrctrl *pwr = &device->pwrctrl;
 	struct tz_priv *priv = pwrscale->priv;

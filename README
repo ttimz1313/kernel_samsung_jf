@@ -19,6 +19,7 @@ Features:
 
 Change log:
 20160808
+-Fixed GPU simple governor. It now works and is selectable.
 -Added 450 MHz GPU frequency back in. Still overclocked to 487 MHz.
 
 20160729
