@@ -13,11 +13,18 @@ Features:
 -Lionheart and many other governors
 -CPU overclocked to 1998 MHz
 -GPU overclocked to 487 Mhz
+-CPU and GPU voltage control (over/under)
 -Fast charge
 -Psudo file system encryption support
 
 
 Change log:
+20160809
+-Added voltage control after reviewing Faux123 and Javelinanddart's code.
+  -Over/under volt control for CPU and GPU. KA app only supports CPU at this time.
+  -Control GPU at /sys/devices/system/cpu/cpufreq/vdd_table/gpu_vdd_levels
+  -Control CPU at /sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels
+
 20160808
 -Fixed GPU simple governor. It now works and is selectable.
 -Added 450 MHz GPU frequency back in. Still overclocked to 487 MHz.

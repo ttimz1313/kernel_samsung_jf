@@ -32,11 +32,6 @@
 
 #include <trace/events/power.h>
 
-// Added after reviewing Faux123's code. WJH
-extern ssize_t get_gpu_vdd_levels_str(char *buf);
-extern void set_gpu_vdd_levels(int uv_tbl[]);
-// Added after reviewing Faux123's code. WJH
-
 /**
  * The "cpufreq driver" - the arch- or hardware-dependent low
  * level driver of CPUFreq support, and its spinlock. This lock
@@ -456,22 +451,6 @@ static ssize_t store_##file_name					\
 store_one(scaling_min_freq, min);
 store_one(scaling_max_freq, max);
 
-// Added after reviewing Faux123's code. WJH
-ssize_t show_GPU_mV_table(struct cpufreq_policy *policy, char *buf)
-{
-	return get_gpu_vdd_levels_str(buf);
-}
-
-ssize_t store_GPU_mV_table(struct cpufreq_policy *policy, const char *buf, size_t count)
-{
-	unsigned int ret = -EINVAL;
-	unsigned int u[3];
-	ret = sscanf(buf, "%d %d %d", &u[0], &u[1], &u[2]);
-	set_gpu_vdd_levels(u);
-	return count;
-}
-// Added after reviewing Faux123's code. WJH
-
 /**
  * show_cpuinfo_cur_freq - current CPU frequency as detected by hardware
  */
@@ -648,6 +627,82 @@ static ssize_t show_bios_limit(struct cpufreq_policy *policy, char *buf)
 	}
 	return sprintf(buf, "%u\n", policy->cpuinfo.max_freq);
 }
+// WJH added based on Javelinanddart and Faux123 code.
+extern ssize_t acpuclk_get_vdd_levels_str(char *buf);
+extern void acpuclk_set_vdd(unsigned acpu_khz, int vdd);
+
+static ssize_t show_vdd_levels(struct kobject *a, struct attribute *b, char *buf) {
+	return acpuclk_get_vdd_levels_str(buf);
+}
+
+static ssize_t store_vdd_levels(struct kobject *a, struct attribute *b, const char *buf, size_t count) {
+
+	int i = 0, j;
+	int pair[2] = { 0, 0 };
+	int sign = 0;
+
+	if (count < 1)
+		return 0;
+
+	if (buf[0] == '-') {
+		sign = -1;
+		i++;
+	}
+	else if (buf[0] == '+') {
+		sign = 1;
+		i++;
+	}
+
+	for (j = 0; i < count; i++) {
+
+		char c = buf[i];
+
+		if ((c >= '0') && (c <= '9')) {
+			pair[j] *= 10;
+			pair[j] += (c - '0');
+		}
+		else if ((c == ' ') || (c == '\t')) {
+			if (pair[j] != 0) {
+				j++;
+
+				if ((sign != 0) || (j > 1))
+					break;
+			}
+		}
+		else
+			break;
+	}
+
+	if (sign != 0) {
+		if (pair[0] > 0)
+			acpuclk_set_vdd(0, sign * pair[0]);
+	}
+	else {
+		if ((pair[0] > 0) && (pair[1] > 0))
+			acpuclk_set_vdd((unsigned)pair[0], pair[1]);
+		else
+			return -EINVAL;
+	}
+	return count;
+}
+// WJH added based on Javelinanddart and Faux123 code.
+extern ssize_t get_gpu_vdd_levels_str(char *buf);
+extern void set_gpu_vdd_levels(int uv_tbl[]);
+
+static ssize_t show_gpu_vdd_levels(struct kobject *a, struct attribute *b, char *buf)
+{
+	return get_gpu_vdd_levels_str(buf);
+}
+
+static ssize_t store_gpu_vdd_levels(struct kobject *a, struct attribute *b, const char *buf, size_t count)
+{
+	unsigned int ret = -EINVAL;
+	unsigned int u[3];
+	ret = sscanf(buf, "%d %d %d", &u[0], &u[1], &u[2]);
+	set_gpu_vdd_levels(u);
+	return count;
+}
+// WJH added based on Javelinanddart and Faux123 code.
 
 cpufreq_freq_attr_ro_perm(cpuinfo_cur_freq, 0400);
 cpufreq_freq_attr_ro(cpuinfo_min_freq);
@@ -664,10 +719,8 @@ cpufreq_freq_attr_rw(scaling_min_freq);
 cpufreq_freq_attr_rw(scaling_max_freq);
 cpufreq_freq_attr_rw(scaling_governor);
 cpufreq_freq_attr_rw(scaling_setspeed);
-
-// Added after reviewing Faux123's code. WJH
-cpufreq_freq_attr_rw(GPU_mV_table);
-// Added after reviewing Faux123's code. WJH
+define_one_global_rw(vdd_levels);
+define_one_global_rw(gpu_vdd_levels);
 
 static struct attribute *default_attrs[] = {
 	&cpuinfo_min_freq.attr,
@@ -682,8 +735,18 @@ static struct attribute *default_attrs[] = {
 	&scaling_driver.attr,
 	&scaling_available_governors.attr,
 	&scaling_setspeed.attr,
-	&GPU_mV_table.attr,
 	NULL
+};
+// WJH added after reviewing Javelinanddart and Faux123 code.
+static struct attribute *voltage_attrs[] = {
+	&vdd_levels.attr,
+	&gpu_vdd_levels.attr,
+	NULL
+};
+
+static struct attribute_group voltage_attr_group = {
+	.attrs = voltage_attrs,
+	.name = "vdd_table",
 };
 
 struct kobject *cpufreq_global_kobject;
@@ -2076,6 +2139,7 @@ EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
 static int __init cpufreq_core_init(void)
 {
 	int cpu;
+	int rc;
 
 	if (cpufreq_disabled())
 		return -ENODEV;
@@ -2094,7 +2158,7 @@ static int __init cpufreq_core_init(void)
 	cpufreq_global_kobject->kset = cpufreq_kset;
 
 	register_syscore_ops(&cpufreq_syscore_ops);
-
+	rc = sysfs_create_group(cpufreq_global_kobject, &voltage_attr_group);
 	return 0;
 }
 core_initcall(cpufreq_core_init);
